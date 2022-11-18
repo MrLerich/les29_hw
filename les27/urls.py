@@ -21,10 +21,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', first),
 
-    path('cat/', CategoryListCreateView.as_view()),
+    path('cat/', CategoryListCreateView.as_view(), name='cat'),
     path('cat/<int:pk>', CategoryDetailView.as_view()),
 
-    path('ad/', AdListCreateView.as_view()),
+    path('ad/', AdListCreateView.as_view(), name='ad'),
     path('ad/<int:pk>', AdDetailView.as_view())
 
 ]

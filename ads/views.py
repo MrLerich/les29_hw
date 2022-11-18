@@ -1,4 +1,6 @@
 import json
+
+from django.db.models.manager import BaseManager
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -28,7 +30,7 @@ class AdListCreateView(View):
 
     def post(self, request) -> JsonResponse:
         data = json.loads(request.body)
-        ad = Ad.objects.create(**data)
+        ad: Ad = Ad.objects.create(**data)
         return JsonResponse({
             'id': ad.pk,
             'name': ad.name,
@@ -43,7 +45,7 @@ class AdListCreateView(View):
 @method_decorator(csrf_exempt, name='dispatch')
 class CategoryListCreateView(View):
     def get(self, request) -> JsonResponse:
-        categories = Category.objects.all()
+        categories: BaseManager[Category] = Category.objects.all()
         response = []
         for cat in categories:
             response.append({
@@ -54,7 +56,7 @@ class CategoryListCreateView(View):
 
     def post(self, request) -> JsonResponse:
         data = json.loads(request.body)
-        cat = Category.objects.create(**data)
+        cat: Category = Category.objects.create(**data)
         return JsonResponse({
                             'id': cat.pk,
                             'name': cat.name,
