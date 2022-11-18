@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import render
 
-def root(request):
+
+def first(request):
     return JsonResponse({"status": "ok"})

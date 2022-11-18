@@ -16,7 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+
+from ads.views import first
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', root)
+    path('', first)
 ]
