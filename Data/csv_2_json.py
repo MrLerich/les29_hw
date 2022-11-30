@@ -1,8 +1,10 @@
 import csv
 import json
 
-ADS = 'ads'
-CATEGORY = 'categories'
+ADS = 'ad'
+CATEGORY = 'category'
+LOC = 'location'
+USER = 'user'
 
 
 def convert_csv2json(csv_file, json_file, model):
@@ -33,3 +35,5 @@ def convert_csv2json(csv_file, json_file, model):
 
 convert_csv2json(f'{ADS}.csv', f'{ADS}.json', 'ads.ad')
 convert_csv2json(f'{CATEGORY}.csv', f'{CATEGORY}.json', 'ads.category')
+convert_csv2json(f'{USER}.csv', f'{USER}.json', 'users.user')
+convert_csv2json(f'{LOC}.csv', f'{LOC}.json', 'users.location')

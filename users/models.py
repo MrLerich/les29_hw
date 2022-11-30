@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # id,first_name,last_name,username,password,role,age,location_id
 # 1,Павел,Никифоров,pnikifirov,gZvptL,member,21,1
 class Location(models.Model):
@@ -22,7 +23,6 @@ class UserRoles:
     choices = ((MEMBER, 'Пользователь'),
                (MODERATOR, 'Модератор'),
                (ADMIN, 'Администратор'))
-
 
 
 class User(models.Model):
