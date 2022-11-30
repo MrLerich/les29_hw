@@ -10,6 +10,7 @@ packages = [{include = "larin_les27"}]
 python = "^3.11"
 django = "^4.1.3"
 psycopg2 = "^2.9.5"
+pillow = "^9.3.0"
 
 [tool.poetry.dev-dependencies]
 

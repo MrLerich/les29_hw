@@ -8,14 +8,18 @@ USER = 'user'
 
 
 def convert_csv2json(csv_file, json_file, model):
+    result = []
     with open(csv_file, encoding='utf-8') as csv_file:
-        result = []
         for row in csv.DictReader(csv_file):
             to_add = {'model': model, 'pk': int(row['Id'] if 'Id' in row else row['id'])}
             if 'id' in row:
                 del row['id']
             else:
                 del row['Id']
+
+            if 'location_id' in row:
+                row['location'] = [int(row['location_id'])]
+                del row['location_id']
 
             if 'is_published' in row:
                 if row['is_published'] == 'TRUE':
