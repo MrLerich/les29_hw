@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, CreateView, ListView, UpdateView, DeleteView
+from urllib3.util import request
 
 from ads.models import Ad, Category
 from users.models import User
@@ -72,7 +73,8 @@ class AdDetailView(DetailView):
             'category': ad.category.name,
             'price': ad.price,
             'description': ad.description,
-            'is_published': ad.is_published
+            'is_published': ad.is_published,
+            'image': ad.image.url if ad.image else None
         },
             safe=False)
 
@@ -81,6 +83,7 @@ class AdDetailView(DetailView):
 class AdUpdateView(UpdateView):
     model = Ad
     fields = ['name']
+
     def patch(self, request, *args, **kwargs):
         super().post(request, *args, **kwargs)
         data = json.loads(request.body)
@@ -113,3 +116,24 @@ class AdDeleteView(DeleteView):
     def delete(self, request, *args, **kwargs):
         super().delete(request, *args, **kwargs)
         return JsonResponse({'status': 'ok'}, status=204)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class AdUploadImage(UpdateView):
+    model = Ad
+    fields = ['name']
+
+    def post(self, request, *args, **kwargs) -> JsonResponse:
+        self.object = self.get_object()
+        self.object.image = request.FILES.get('image')
+        self.object.save()
+        return JsonResponse({
+            'id': self.object.pk,
+            'name': self.object.name,
+            'author': self.object.author.username,
+            'price': self.object.price,
+            'description': self.object.description,
+            'category': self.object.category.name,
+            'is_published': self.object.is_published,
+            'image': self.object.image.url if self.object.image else None
+        }, safe=False)
