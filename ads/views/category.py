@@ -5,9 +5,14 @@ from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ListView
 
 from ads.models import Ad, Category
+
+
+
+class CategoryListView(ListView):
+    model = Category
 
 
 @method_decorator(csrf_exempt, name='dispatch')
