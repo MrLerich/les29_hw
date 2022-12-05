@@ -1,13 +1,14 @@
 import json
 
+from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, CreateView, ListView, UpdateView, DeleteView
-from urllib3.util import request
 
 from ads.models import Ad, Category
+from les27.settings import TOTAL_ON_PAGE
 from users.models import User
 
 
@@ -20,16 +21,23 @@ class AdListView(ListView):
 
     def get(self, request, *args, **kwargs) -> JsonResponse:
         super().get(request, *args, **kwargs)
-        ads = self.object_list.all()
-        response: list = []
-        for ad in ads:
-            response.append({
-                'id': ad.pk,
-                'name': ad.name,
-                'author': ad.author.username,
-                'price': ad.price,
-                'category': ad.category.name
-            })
+        self.object_list = self.object_list.order_by('-price')  # по убыванию цены==обратный порядок
+        paginator = Paginator(self.object_list, TOTAL_ON_PAGE)
+        page = request.GET.get('page')
+        obj = paginator.get_page(page)
+        response = {}
+        items_list = [{'id': ad.pk,
+                       'name': ad.name,
+                       'author': ad.author.username,
+                       'price': ad.price,
+                       'descriptions': ad.description,
+                       'is_published': ad.is_published,
+                       'category': ad.category.name,
+                       'image': ad.image.url if ad.image else None} for ad in obj]
+        response['items'] = items_list
+        response['total'] = self.object_list.count()
+        response['num_pages'] = paginator.num_pages
+
         return JsonResponse(response, safe=False)
 
 
