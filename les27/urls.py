@@ -15,22 +15,18 @@ Including another URLconf
 """
 
 from django.conf.urls.static import static
-from django.urls import path
 from django.contrib import admin
-from tomlkit import document
+from django.urls import path, include
 
-from ads.views import first, CategoryListCreateView, CategoryDetailView, AdListCreateView, AdDetailView
+from ads.views.ad import *
 from les27 import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', first),
 
-    path('cat/', CategoryListCreateView.as_view(), name='cat'),
-    path('cat/<int:pk>', CategoryDetailView.as_view()),
-
-    path('ad/', AdListCreateView.as_view(), name='ad'),
-    path('ad/<int:pk>', AdDetailView.as_view())
+    path('ad/', include('ads.urls.ad')),        #для urls-подкатегорий ad
+    path('cat/', include('ads.urls.category'))  #для urls-подкатегорий category
 
 ]
 

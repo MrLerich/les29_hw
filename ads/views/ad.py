@@ -42,27 +42,6 @@ class AdListCreateView(View):
             safe=False)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class CategoryListCreateView(View):
-    def get(self, request) -> JsonResponse:
-        categories: BaseManager[Category] = Category.objects.all()
-        response = []
-        for cat in categories:
-            response.append({
-                            'id': cat.pk,
-                            'name': cat.name,
-                            })
-        return JsonResponse(response, safe=False)
-
-    def post(self, request) -> JsonResponse:
-        data = json.loads(request.body)
-        cat: Category = Category.objects.create(**data)
-        return JsonResponse({
-                            'id': cat.pk,
-                            'name': cat.name,
-                            },
-                            safe=False)
-
 
 class AdDetailView(DetailView):
     queryset = Ad.objects.all() #запрос в базу
@@ -80,13 +59,3 @@ class AdDetailView(DetailView):
                             safe=False)
 
 
-class CategoryDetailView(DetailView):
-    queryset = Category.objects.all()
-
-    def get(self, request, *args, **kwargs) -> JsonResponse:
-        cat = self.get_object()
-        return JsonResponse({
-                            'id': cat.pk,
-                            'name': cat.name,
-                            },
-                            safe=False)
