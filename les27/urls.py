@@ -26,7 +26,8 @@ urlpatterns = [
     path('', first),
 
     path('ad/', include('ads.urls.ad')),        #для urls-подкатегорий ad
-    path('cat/', include('ads.urls.category'))  #для urls-подкатегорий category
+    path('cat/', include('ads.urls.category')),  #для urls-подкатегорий category
+    path('user/', include('users.urls'))  #для urls-подкатегорий user
 
 ]
 

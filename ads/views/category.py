@@ -44,7 +44,7 @@ class CategoryCreateView(CreateView):
 
 
 class CategoryDetailView(DetailView):
-    model=Category
+    model = Category
 
     def get(self, request, *args, **kwargs) -> JsonResponse:
         cat = self.get_object()
