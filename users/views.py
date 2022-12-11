@@ -2,14 +2,14 @@ import json
 
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import DetailView, CreateView, ListView, UpdateView, DeleteView
+from django.views.generic import DetailView, ListView, UpdateView, DeleteView
+from rest_framework.generics import CreateAPIView
+from rest_framework.viewsets import ModelViewSet
 
-from ads.models import Ad, Category
 from les27.settings import TOTAL_ON_PAGE
-from users.models import User, Location
+from users.serializers import *
 
 
 class UserListView(ListView):
@@ -99,33 +99,43 @@ class UserDeleteView(DeleteView):
         super().delete(request, *args, **kwargs)
         return JsonResponse({'status': 'ok. user delete successfully'}, status=204)
 
-@method_decorator(csrf_exempt, name='dispatch')
-class UserCreateView(CreateView):
-    model = User
-    fields = ['username']
+# @method_decorator(csrf_exempt, name='dispatch')
+# class UserCreateView(CreateView):
+#     model = User
+#     fields = ['username']
+#
+#     def post(self, request, *args, **kwargs):
+#
+#         data = json.loads(request.body)
+#         user = User.objects.create(
+#             username=data['username'],
+#             first_name=data['first_name'],
+#             last_name=data['last_name'],
+#             age=data['age'],
+#             role=data['role']
+#         )
+#         if 'location' in data:
+#             for loc_name in data['location']:
+#                 loc, _ = Location.objects.get_or_create(name=loc_name)
+#                 user.location.add(loc)
+#
+#         return JsonResponse({
+#             'id': user.pk,
+#             'username': user.username,
+#             'first_name': user.first_name,
+#             'last_name': user.last_name,
+#             'role': user.role,
+#             'age': user.age,
+#             'location': list(map(str, user.location.all())),
+#             'total_ads': user.ads.filter(is_published=True).count()
+#         }, safe=False)
 
-    def post(self, request, *args, **kwargs):
 
-        data = json.loads(request.body)
-        user = User.objects.create(
-            username=data['username'],
-            first_name=data['first_name'],
-            last_name=data['last_name'],
-            age=data['age'],
-            role=data['role']
-        )
-        if 'location' in data:
-            for loc_name in data['location']:
-                loc, _ = Location.objects.get_or_create(name=loc_name)
-                user.location.add(loc)
+class UserCreateView(CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserCreateSerializer
 
-        return JsonResponse({
-            'id': user.pk,
-            'username': user.username,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'role': user.role,
-            'age': user.age,
-            'location': list(map(str, user.location.all())),
-            'total_ads': user.ads.filter(is_published=True).count()
-        }, safe=False)
+class LocationViewSet(ModelViewSet):
+    queryset = Location.objects.all()
+    serializer_class = LocationSerializer
+

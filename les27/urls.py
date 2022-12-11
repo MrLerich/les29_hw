@@ -17,19 +17,27 @@ Including another URLconf
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework import routers
 
 from ads.views.ad import *
 from les27 import settings
+from users.views import LocationViewSet
+
+router = routers.SimpleRouter()
+router.register('location', LocationViewSet)
+router.register('ad', AdViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', first),
 
-    path('ad/', include('ads.urls.ad')),        #для urls-подкатегорий ad
-    path('cat/', include('ads.urls.category')),  #для urls-подкатегорий category
-    path('user/', include('users.urls'))  #для urls-подкатегорий user
+    path('ad/', include('ads.urls.ad')),  # для urls-подкатегорий ad
+    path('cat/', include('ads.urls.category')),  # для urls-подкатегорий category
+    path('user/', include('users.urls'))  # для urls-подкатегорий user
 
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += router.urls

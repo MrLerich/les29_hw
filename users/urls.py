@@ -2,6 +2,8 @@ from django.urls import path
 
 from users.views import *
 
+
+
 urlpatterns = [
     path('', UserListView.as_view()),
     path('<int:pk>/', UserDetailView.as_view()),
@@ -10,3 +12,5 @@ urlpatterns = [
     path('create/', UserCreateView.as_view()),
 
 ]
+
+
